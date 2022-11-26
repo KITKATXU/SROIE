@@ -1,14 +1,29 @@
-# layoutlm-finetuned-sroie
+### Rule1
 
-This model is a fine-tuned version of [microsoft/layoutlm-base-uncased](https://huggingface.co/microsoft/layoutlm-base-uncased) on the sroie dataset.
+> Delete duplicated TOTAL values in one invoice.
 
-I used KFold to split the data and trained 5 models. Before that,  the data are shuffled based on their invoice number.
+### Rule2
 
-The probability results of each token provided by the 5 models are simply stacked by summing up.  For those with high scores on 'S-TOTAL', they are classified as 'S-TOTAL', even if the scores are lower than 'O'.
+> Label the digits tokens right before and after 'S-TOTAL' tokens as  'S-TOTAL'.
 
-The f1 score on op-test dataset based on my model are 88.04.
+### Rule3
 
-To improve my results, 7 manually built rules are applied. The final f1 reached 92.83.
+> For the invoices without a TOTAL value, find the last cash token and label the proceeding digits tokens as  'S-TOTAL'.
 
-See rule introductions in directory rules.
+### Rule4
+
+> For the invoices without a TOTAL value, find the last total token and label the succeeding digits tokens as  'S-TOTAL'.
+
+### Rule5
+
+> For the invoices without a TOTAL value, sort all float tokens and label the maximum one as 'S-TOTAL'.
+
+### Rule6
+
+> For the invoices without a DATE value, match their tokens with patterns like 'X/X/X' or 'X-X-X'.
+
+### Rule7
+
+> For the invoices without a TOTAL value, select all digits tokens and simply label the last 4 as 'S-TOTAL'.
+
 
